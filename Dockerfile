@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir \
     apscheduler
 
 # App source
-COPY app.py fetcher.py scheduler.py ./
+COPY . .
 
 # Runtime data volume (SQLite lives here)
 VOLUME ["/app/data"]
