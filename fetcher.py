@@ -1,29 +1,29 @@
-import requests
 import sqlite3
+import requests
 import re
 
+API_URL = "https://api.web.mypertamina.id/price"
+TARGET_PROVINCE = "Prov. Jawa Tengah"
 DB_PATH = "/app/data/prices.db"
-TIMEOUT = 20
-
-FUEL_TYPES = [
-    "Pertalite",
-    "Biosolar",
-    "Pertamax",
-    "Pertamax Green",
-    "Pertamax Turbo",
-    "Dexlite",
-    "Pertamina Dex",
-]
 
 def db():
     return sqlite3.connect(DB_PATH, timeout=30)
+
+def normalize_price(raw):
+    """
+    Convert 'Rp. 13.500' or 'Rp 10.000' → 13500
+    Return None for '-' or empty.
+    """
+    if not raw or raw.strip() == "-" or "Tidak Tersedia" in raw:
+        return None
+    digits = re.sub(r"[^\d]", "", raw)
+    return int(digits) if digits else None
 
 def last_price(conn, fuel):
     cur = conn.cursor()
     cur.execute(
         """
-        SELECT price
-        FROM fuel_prices
+        SELECT price FROM fuel_prices
         WHERE fuel_type = ?
         ORDER BY fetched_at DESC
         LIMIT 1
@@ -33,81 +33,53 @@ def last_price(conn, fuel):
     row = cur.fetchone()
     return row[0] if row else None
 
-def save_if_changed(conn, fuel, price, source):
+def save_if_changed(conn, fuel, price):
     if last_price(conn, fuel) == price:
         return False
-
     conn.execute(
-        "INSERT INTO fuel_prices (fuel_type, price, source) VALUES (?, ?, ?)",
-        (fuel, price, source),
+        """
+        INSERT INTO fuel_prices (fuel_type, price, source)
+        VALUES (?, ?, ?)
+        """,
+        (fuel, price, "mypertamina-api"),
     )
     conn.commit()
     return True
 
-# -------- PRIMARY: PATRA NIAGA (TEXT PARSING) --------
-
-def fetch_patra_niaga():
-    url = "https://pertaminapatraniaga.com/page/harga-terbaru-bbm"
-    text = requests.get(url, timeout=TIMEOUT).text
-
-    if "Jawa Tengah" not in text:
-        raise RuntimeError("Patra: Jawa Tengah section not found")
-
-    section = text.split("Jawa Tengah", 1)[1][:4000]
-
-    prices = {}
-    for fuel in FUEL_TYPES:
-        match = re.search(
-            rf"{fuel}.*?Rp\s?([\d\.]+)",
-            section,
-            re.IGNORECASE | re.DOTALL,
-        )
-        if match:
-            prices[fuel] = int(match.group(1).replace(".", ""))
-
-    if not prices:
-        raise RuntimeError("Patra: prices not extracted")
-
-    return prices, "patra-niaga"
-
-# -------- FALLBACK: MYPERTAMINA (BEST EFFORT) --------
-
-def fetch_mypertamina():
-    url = "https://mypertamina.id/about/product-price"
-    text = requests.get(url, timeout=TIMEOUT).text
-
-    prices = {}
-    for fuel in FUEL_TYPES:
-        match = re.search(
-            rf"{fuel}.*?Rp\s?([\d\.]+)",
-            text,
-            re.IGNORECASE | re.DOTALL,
-        )
-        if match:
-            prices[fuel] = int(match.group(1).replace(".", ""))
-
-    if not prices:
-        raise RuntimeError("MyPertamina: prices not extracted")
-
-    return prices, "mypertamina"
-
-# -------- ENTRY --------
-
 def run_fetch():
+    response = requests.get(API_URL, timeout=30)
+    response.raise_for_status()
+    payload = response.json()
+
+    provinces = payload.get("data", [])
+    if not provinces:
+        raise RuntimeError("No provinces in API response")
+
+    # Find Jawa Tengah
+    jawa_tengah = next(
+        (p for p in provinces if p.get("province") == TARGET_PROVINCE),
+        None
+    )
+    if not jawa_tengah:
+        raise RuntimeError(f"{TARGET_PROVINCE} not found in API data")
+
+    prices = {}
+    for item in jawa_tengah.get("list_price", []):
+        fuel = item.get("product")
+        raw_price = item.get("price")
+        price = normalize_price(raw_price)
+        if price is not None:
+            prices[fuel] = price
+
+    if not prices:
+        raise RuntimeError("No valid prices extracted for Jawa Tengah")
+
+    print("[DEBUG] Prices:", prices)
+
     conn = db()
-
-    try:
-        prices, source = fetch_patra_niaga()
-    except Exception as e:
-        print(f"[WARN] Patra failed: {e}")
-        prices, source = fetch_mypertamina()
-
-    print("[DEBUG] Parsed prices:", prices)
-
     for fuel, price in prices.items():
-        if save_if_changed(conn, fuel, price, source):
-            print(f"[UPDATE] {fuel} → Rp{price} ({source})")
-
+        if save_if_changed(conn, fuel, price):
+            print(f"[UPDATE] {fuel} → Rp{price}")
     conn.close()
 
 if __name__ == "__main__":
