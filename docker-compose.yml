@@ -1,18 +1,18 @@
 services:
   web:
-    build: .
+    image: fueltracker:local
     container_name: fuel-tracker-web
     command: python app.py
     volumes:
       - ./data:/app/data
     ports:
-      - "127.0.0.1:5000:5000"
+      - 5000:5000
     restart: unless-stopped
-
   scheduler:
-    build: .
+    image: fueltracker:local
     container_name: fuel-tracker-scheduler
     command: python scheduler.py
     volumes:
       - ./data:/app/data
     restart: unless-stopped
+networks: {}
