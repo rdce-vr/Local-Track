@@ -12,7 +12,7 @@ html, body {
 }
 
 .card {
-  background: rgba(15, 15, 19, 1);
+  background: rgba(21, 21, 25, 1);
   border-radius: 0px;
   padding: 12px 16px;
   width: 100%;
@@ -24,26 +24,28 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-weight: 600;
+  font-weight: 850;
   margin-bottom: 10px;
+  color: #d9c38c;
+  font-size: 20px;
 }
 
 .header .sub {
-  font-size: 12px;
-  color: #c4d3dc;
+  font-size: 18px;
+  color: #cd9c38c;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 thead th {
   text-align: left;
-  font-weight: 500;
-  color: #c4d3dc;
-  padding-bottom: 6px;
+  font-weight: 800;
+  color: #d9c38c;
+  padding-bottom: 10px;
   border-bottom: 1px solid #2a2a2a;
 }
 
@@ -56,7 +58,7 @@ tbody tr:last-child {
 }
 
 td {
-  padding: 6px 0;
+  padding: 10px 0;
   color: #c4d3dc
 }
 
