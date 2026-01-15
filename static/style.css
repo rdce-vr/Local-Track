@@ -30,7 +30,7 @@ html, body {
 
 .header .sub {
   font-size: 12px;
-  color: #9ca3af;
+  color: #c4d3dc;
 }
 
 table {
@@ -42,7 +42,7 @@ table {
 thead th {
   text-align: left;
   font-weight: 500;
-  color: #9ca3af;
+  color: #c4d3dc;
   padding-bottom: 6px;
   border-bottom: 1px solid #2a2a2a;
 }
@@ -57,6 +57,7 @@ tbody tr:last-child {
 
 td {
   padding: 6px 0;
+  color: #c4d3dc
 }
 
 .price {
@@ -66,5 +67,5 @@ td {
 
 .time {
   font-size: 11px;
-  color: #6b7280;
+  color: #c4d3dc;
 }
