@@ -11,10 +11,10 @@ def db():
 
 def normalize_price(raw):
     """
-    Convert 'Rp. 13.500' or 'Rp 10.000' → 13500
-    Return None for '-' or empty.
+    'Rp. 13.500' / 'Rp 10.000' -> 13500
+    '-' -> None
     """
-    if not raw or raw.strip() == "-" or "Tidak Tersedia" in raw:
+    if not raw or raw.strip() == "-":
         return None
     digits = re.sub(r"[^\d]", "", raw)
     return int(digits) if digits else None
@@ -23,7 +23,8 @@ def last_price(conn, fuel):
     cur = conn.cursor()
     cur.execute(
         """
-        SELECT price FROM fuel_prices
+        SELECT price
+        FROM fuel_prices
         WHERE fuel_type = ?
         ORDER BY fetched_at DESC
         LIMIT 1
@@ -47,34 +48,32 @@ def save_if_changed(conn, fuel, price):
     return True
 
 def run_fetch():
-    response = requests.get(API_URL, timeout=30)
-    response.raise_for_status()
-    payload = response.json()
+    r = requests.get(API_URL, timeout=30)
+    r.raise_for_status()
+    payload = r.json()
 
-    provinces = payload.get("data", [])
+    provinces = payload.get("data", {}).get("data", [])
     if not provinces:
-        raise RuntimeError("No provinces in API response")
+        raise RuntimeError("No province data returned")
 
-    # Find Jawa Tengah
     jawa_tengah = next(
         (p for p in provinces if p.get("province") == TARGET_PROVINCE),
-        None
+        None,
     )
     if not jawa_tengah:
-        raise RuntimeError(f"{TARGET_PROVINCE} not found in API data")
+        raise RuntimeError(f"{TARGET_PROVINCE} not found")
 
     prices = {}
     for item in jawa_tengah.get("list_price", []):
         fuel = item.get("product")
-        raw_price = item.get("price")
-        price = normalize_price(raw_price)
+        price = normalize_price(item.get("price"))
         if price is not None:
             prices[fuel] = price
 
     if not prices:
-        raise RuntimeError("No valid prices extracted for Jawa Tengah")
+        raise RuntimeError("No valid prices for Jawa Tengah")
 
-    print("[DEBUG] Prices:", prices)
+    print("[DEBUG] Jawa Tengah prices:", prices)
 
     conn = db()
     for fuel, price in prices.items():
