@@ -24,7 +24,7 @@
         {% for row in prices %}
         <tr>
           <td>{{ row.fuel_type }}</td>
-          <td class="price">Rp {{ "{:,}".format(item.price).replace(",", ".") }}</td>
+          <td class="price">Rp {{ "{:,}".format(row.price).replace(",", ".") }}</td>
         </tr>
         {% endfor %}
       </tbody>
