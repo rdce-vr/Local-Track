@@ -70,3 +70,10 @@ td {
   font-size: 13px;
   color: #c4d3dc;
 }
+
+.group-row td {
+  padding-top: 16px;
+  font-weight: 600;
+  color: #aaa;
+  border-bottom: none;
+}
