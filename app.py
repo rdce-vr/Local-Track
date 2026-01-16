@@ -66,7 +66,7 @@ def index():
 
     last_update = rows[0][2] if rows else None
 
-    return render_template_string(HTML, grouped=grouped, last_update=last_update)
+    return render_template(HTML, grouped=grouped, last_update=last_update)
 
 
 if __name__ == "__main__":
