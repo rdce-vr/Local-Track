@@ -63,8 +63,6 @@ td {
 .price {
   font-family: 'JetBrains Mono', monospace;
   text-align: right;
-  width: 140px;
-  white-space: nowrap;
 }
 
 .time {
