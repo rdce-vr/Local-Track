@@ -21,11 +21,16 @@
         </tr>
       </thead>
       <tbody>
-        {% for row in prices %}
-        <tr>
-          <td>{{ row.fuel_type }}</td>
-          <td class="price">Rp {{ "{:,}".format(row.price).replace(",", ".") }}</td>
+        {% for group, fuels in grouped.items() %}
+        <tr class="group-row">
+          <td colspan="2">{{ group }}</td>
         </tr>
+        {% for fuel, price, updated in fuels %}
+        <tr>
+          <td class="fuel">{{ fuel }}</td>
+          <td class="price">Rp {{ "{:,}".format(price).replace(",", ".") }}</td>
+        </tr>
+        {% endfor %}
         {% endfor %}
       </tbody>
     </table>
