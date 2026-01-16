@@ -10,7 +10,9 @@
   <div class="card">
     <div class="header">
       <span><img src="https://freepnglogo.com/images/all_img/1706437879pertamina-icon-png.png" height="20px" width="20px"/> Pertamina - Jawa Tengah</span>
-      <span class="sub">Last Update: {{ prices[0].fetched_at.strftime('%d %b %y %H:%M') if prices }}</span>
+      {% if last_update %}
+      <span class="sub">Last Update: {{ last_update.strftime('%d %b %y %H:%M') if prices }}</span>
+      {% endif %}
     </div>
 
     <table>
