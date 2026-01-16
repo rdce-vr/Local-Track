@@ -24,7 +24,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   color: #c4d3dc;
   font-size: 14px;
   font-weight: 100;
@@ -37,7 +37,7 @@ html, body {
 }
 
 table {
-  width: 120%;
+  width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
