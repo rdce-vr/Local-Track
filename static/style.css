@@ -33,6 +33,7 @@ html, body {
 .header .sub {
   font-size: 14px;
   color: #c4d3dc;
+  padding-right: 240px;
 }
 
 table {
