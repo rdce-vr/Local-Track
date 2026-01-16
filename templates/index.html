@@ -27,10 +27,20 @@
         <tr class="group-row">
           <td colspan="2">{{ group }}</td>
         </tr>
-        {% for fuel, price, updated in fuels %}
+        {% for fuel, price, updated, prev_price, delta in fuels %}
         <tr>
           <td class="fuel">{{ fuel }}</td>
-          <td class="price">Rp {{ "{:,}".format(price).replace(",", ".") }}</td>
+          <td class="price">Rp {{ "{:,}".format(price).replace(",", ".") }}
+            {% if delta is not none %}
+              {% if delta > 0 %}
+                <span class="delta up" title="Rp {{'{:,}' .format(prev_price).replace(',', '.')}}">🔺</span>
+                {% elif delta < 0 %}
+                <span class="delta down" title="Rp {{'{:,}' .format(prev_price).replace(',', '.')}}">🔻</span>
+                {% else %}
+                <span class="delta same" title="No Change">➖</span>
+              {% endif %}
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
         {% endfor %}
