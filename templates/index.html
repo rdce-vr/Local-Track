@@ -8,8 +8,8 @@
 <body>
   <div class="card">
     <div class="header">
-      <span>⛽ Harga BBM</span>
-      <span class="sub">Jawa Tengah</span>
+      <span>Fuel Price - Jawa Tengah</span>
+      <span class="time">Last Update: {{ row.fetched_at }}</span>
     </div>
 
     <table>
@@ -17,7 +17,6 @@
         <tr>
           <th>BBM</th>
           <th>Harga</th>
-          <th>Update</th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +24,6 @@
         <tr>
           <td>{{ row.fuel_type }}</td>
           <td class="price">Rp {{ "{:,}".format(row.price).replace(",", ".") }}</td>
-          <td class="time">{{ row.fetched_at }}</td>
         </tr>
         {% endfor %}
       </tbody>
