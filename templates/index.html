@@ -10,7 +10,7 @@
   <div class="card">
     <div class="header">
       <span><link href="https://freepnglogo.com/images/all_img/1706437879pertamina-icon-png.png" /> Pertamina - Jawa Tengah</span>
-      <span class="sub">Last Update: {{ prices[0].fetched_at if prices }}</span>
+      <span class="sub">Last Update: {{ prices[0].fetched_at.strftime('%d %b %y %H:%M') if prices }}</span>
     </div>
 
     <table>
