@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetim
+from datetime import datetime
 from flask import Flask, render_template
 
 DB_PATH = "/app/data/prices.db"
