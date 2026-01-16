@@ -58,7 +58,24 @@ def index():
         )
         ORDER BY fuel_type
     """)
-    rows = cur.fetchall()
+    latest_rows = cur.fetchall()
+
+    #Get previous price per fuel type
+    cur.execute("""
+        SELECT fuel_type, price
+        FROM fuel_prices
+        WHERE id IN (
+            SELECT MAX(id) 
+            FROM fuel_prices
+            WHERE id NOT IN (
+                SELECT MAX(id)
+                FROM fuel_prices
+                GROUP BY fuel_type
+            )
+            GROUP BY fuel_type
+        )
+    """)
+    previous_rows = cur.fetchall()
 
     #Get last update time
     cur.execute("SELECT MAX(fetched_at) FROM fuel_prices")
@@ -66,8 +83,16 @@ def index():
 
     conn.close()
 
+    previous_map = {fuel.upper(): price for fuel, price in previous_rows}
+
     #Map fuels for grouping
-    fuel_map = {fuel.upper(): (fuel, price, fetched_at) for fuel, price, fetched_at in rows}
+    fuel_map = {}
+    for fuel, price, fetched_at in latest_rows:
+        prev_price = previous_map.get(fuel.upper())
+        delta = None
+        if prev_price is not None:
+            delta = price - prev_price
+        fuel_map[fuel.upper()] = (fuel, price, fetched_at, prev_price, delta)
 
     grouped = {}
     for group, fuels in FUEL_GROUPS.items():
