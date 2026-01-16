@@ -62,6 +62,7 @@ td {
 
 .price {
   font-family: 'JetBrains Mono', monospace;
+  text-align: right;
 }
 
 .time {
