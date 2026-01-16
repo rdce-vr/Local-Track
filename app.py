@@ -27,6 +27,21 @@ def init_db():
     conn.commit()
     conn.close()
 
+FUEL_GROUPS = {
+    "Gasoline": [
+        "PERTALITE",
+        "PERTASHOP",
+        "PERTAMAX",
+        "PERTAMAX GREEN 95",
+        "PERTAMAX TURBO",
+    ],
+    "Diesel": [
+        "PERTAMINA BIOSOLAR SUBSIDI",
+        "DEXLITE",
+        "PERTAMINA DEX",
+    ],
+}
+
 @app.route("/")
 def index():
     conn = get_db()
@@ -39,21 +54,20 @@ def index():
             FROM fuel_prices
             GROUP BY fuel_type
         )
-        ORDER BY fuel_type
     """)
     rows = cur.fetchall()
     conn.close()
 
-    prices = [
-        {
-            "fuel_type": r[0],
-            "price": r[1],
-            "fetched_at": datetime.strptime(r[2], "%Y-%m-%d %H:%M:%S"),
-        }
-        for r in rows
-    ]
+    fuel_map = {fuel.upper(): (fuel, price, fetched_at) for fuel, price, fetched_at in rows}
 
-    return render_template("index.html", prices=prices)
+    grouped = {}
+    for group, fuels in FUEL_GROUPS.items():
+        grouped[group] = [fuel_map[f] for f in fuels if f in fuel_map]
+
+    last_update = rows[0][2] if rows else None
+
+    return render_template_string(HTML, grouped=grouped, last_update=last_update)
+
 
 if __name__ == "__main__":
     init_db()
