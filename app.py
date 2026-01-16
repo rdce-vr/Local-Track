@@ -30,7 +30,7 @@ def init_db():
 FUEL_GROUPS = {
     "Gasoline": [
         "PERTALITE",
-        "PERTASHOP",
+        "PERTAMAX PERTASHOP",
         "PERTAMAX",
         "PERTAMAX GREEN 95",
         "PERTAMAX TURBO",
@@ -66,18 +66,18 @@ def index():
 
     conn.close()
 
+    #Map fuels for grouping
     fuel_map = {fuel.upper(): (fuel, price, fetched_at) for fuel, price, fetched_at in rows}
 
     grouped = {}
     for group, fuels in FUEL_GROUPS.items():
         grouped[group] = [fuel_map[f] for f in fuels if f in fuel_map]
 
-    from datetime import datetime
     last_update = None
-    if last_update_row:
-        last_update = datetime.fromisoformat(last_update_row)
+    if last_update_raw:
+        last_update = datetime.fromisoformat(last_update_raw)
 
-    return render_template(HTML, rows=rows grouped=grouped, last_update=last_update)
+    return render_template('index.html', grouped=grouped, last_update=last_update)
 
 
 if __name__ == "__main__":
