@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetim
 from flask import Flask, render_template
 
 DB_PATH = "/app/data/prices.db"
@@ -29,8 +30,8 @@ def init_db():
 @app.route("/")
 def index():
     conn = get_db()
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute("""
+    cur = conn.cursor()
+    cur.execute("""
         SELECT fuel_type, price, fetched_at
         FROM fuel_prices
         WHERE id IN (
@@ -39,10 +40,20 @@ def index():
             GROUP BY fuel_type
         )
         ORDER BY fuel_type
-    """).fetchall()
+    """)
+    rows = cur.fetchall()
     conn.close()
 
-    return render_template("index.html", prices=rows)
+    prices = [
+        {
+            "fuel_type": r[0],
+            "price": r[1],
+            "fetched_at": datetime.strptime(r[2], "%Y-%m-%d %H:%M:%S"),
+        }
+        for r in rows
+    ]
+
+    return render_template("index.html", prices=prices)
 
 if __name__ == "__main__":
     init_db()
