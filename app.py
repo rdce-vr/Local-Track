@@ -46,6 +46,8 @@ FUEL_GROUPS = {
 def index():
     conn = get_db()
     cur = conn.cursor()
+
+    #Get latest row per fuel type
     cur.execute("""
         SELECT fuel_type, price, fetched_at
         FROM fuel_prices
@@ -54,8 +56,14 @@ def index():
             FROM fuel_prices
             GROUP BY fuel_type
         )
+        ORDER BY fuel_type
     """)
     rows = cur.fetchall()
+
+    #Get last update time
+    cur.execute(SELECT MAX(fetched_at) FROM fuel_prices)
+    last_update_row = cur.fetchone()[0]
+
     conn.close()
 
     fuel_map = {fuel.upper(): (fuel, price, fetched_at) for fuel, price, fetched_at in rows}
@@ -64,9 +72,12 @@ def index():
     for group, fuels in FUEL_GROUPS.items():
         grouped[group] = [fuel_map[f] for f in fuels if f in fuel_map]
 
-    last_update = rows[0][2] if rows else None
+    from datetime import datetime
+    last_update = None
+    if last_update_row:
+        last_update = datetime.fromisoformat(last_update_row)
 
-    return render_template('index.html', grouped=grouped, last_update=last_update)
+    return render_template(HTML, rows=rows grouped=grouped, last_update=last_update)
 
 
 if __name__ == "__main__":
