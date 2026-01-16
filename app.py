@@ -61,8 +61,8 @@ def index():
     rows = cur.fetchall()
 
     #Get last update time
-    cur.execute(SELECT MAX(fetched_at) FROM fuel_prices)
-    last_update_row = cur.fetchone()[0]
+    cur.execute("SELECT MAX(fetched_at) FROM fuel_prices")
+    last_update_raw = cur.fetchone()[0]
 
     conn.close()
 
