@@ -2,21 +2,22 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Harga BBM - Jawa Tengah</title>
+  <title>Fuel Price - Jawa Tengah</title>
+  <link rel="icon" href="https://freepnglogo.com/images/all_img/1706437879pertamina-icon-png.png" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <div class="card">
     <div class="header">
       <span>Fuel Price - Jawa Tengah</span>
-      <span class="sub">Last Update: {{ row.fetched_at }}</span>
+      <span class="sub">Last Update: {{ prices[0].fetched_at if prices }}</span>
     </div>
 
     <table>
       <thead>
         <tr>
-          <th>BBM</th>
-          <th>Harga</th>
+          <th>Fuel Type</th>
+          <th>Price</th>
         </tr>
       </thead>
       <tbody>
