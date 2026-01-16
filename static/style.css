@@ -61,7 +61,7 @@ td {
 }
 
 .price {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .time {
