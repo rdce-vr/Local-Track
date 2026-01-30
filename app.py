@@ -11,6 +11,8 @@ def get_db():
 
 def init_db():
     conn = get_db()
+    
+    #Fuel table
     conn.execute("""
         CREATE TABLE IF NOT EXISTS fuel_prices (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,6 +25,21 @@ def init_db():
     conn.execute("""
         CREATE UNIQUE INDEX IF NOT EXISTS uniq_price_change
         ON fuel_prices (fuel_type, price)
+    """)
+
+    #Gold table
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS gold_prices (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            mid_price INTEGER NOT NULL,
+            buy_price INTEGER NOT NULL,
+            sell_price INTEGER NOT NULL,
+            fetched_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("""
+        CREATE UNIQUE INDEX IF NOT EXISTS uniq_gold_price_change
+        ON gold_prices (mid_price, buy_price, sell_price)
     """)
     conn.commit()
     conn.close()
@@ -104,6 +121,42 @@ def index():
 
     return render_template('index.html', grouped=grouped, last_update=last_update)
 
+#Gold Route
+def gold():
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Latest gold price
+    cur.execute("""
+        SELECT mid_price, buy_price, sell_price, fetched_at
+        FROM gold_prices
+        ORDER BY id DESC
+        LIMIT 1
+    """)
+    row = cur.fetchone()
+
+    # Previous gold price (for delta later if needed)
+    cur.execute("""
+        SELECT mid_price, buy_price, sell_price
+        FROM gold_prices
+        ORDER BY id DESC
+        LIMIT 1 OFFSET 1
+    """)
+    prev = cur.fetchone()
+
+    conn.close()
+
+    from datetime import datetime
+    last_update = None
+    if row:
+        last_update = datetime.fromisoformat(row[3])
+
+    return render_template(
+        "gold.html",
+        current=row,
+        previous=prev,
+        last_update=last_update,
+    )
 
 if __name__ == "__main__":
     init_db()
