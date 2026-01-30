@@ -1,5 +1,5 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
-from fetcher import run_fetch
+from fetcher import run_fetch, run_gold_fetch
 
 SCHEDULER_TZ = "Asia/Jakarta"
 
