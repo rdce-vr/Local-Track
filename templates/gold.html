@@ -8,7 +8,7 @@
 <body>
   <div class="card">
     <div class="header">
-      <span>Gold – Pluang</span>
+      <span class="title">Gold – Pluang</span>
       {% if last_update %}
       <span class="sub">{{ last_update.strftime('%d %b %Y %H:%M') }}</span>
       {% endif %}
@@ -16,23 +16,24 @@
 
     {% if current %}
     <div class="prices">
-      <div class="row">
-        <span class="label">Mid Price</span>
+      <div class="row mid">
+        <span class="label">Mid</span>
         <span class="value">Rp {{ "{:,}".format(current[0]).replace(",", ".") }}</span>
       </div>
-      <div class="row">
-        <span class="label">Sell (Buy from you)</span>
-        <span class="value green">Rp {{ "{:,}".format(current[1]).replace(",", ".") }}</span>
+
+      <div class="row buy">
+        <span class="label">Buy</span>
+        <span class="value">Rp {{ "{:,}".format(current[2]).replace(",", ".") }}</span>
       </div>
-      <div class="row">
-        <span class="label">Buy (Sell to you)</span>
-        <span class="value red">Rp {{ "{:,}".format(current[2]).replace(",", ".") }}</span>
+
+      <div class="row sell">
+        <span class="label">Sell</span>
+        <span class="value">Rp {{ "{:,}".format(current[1]).replace(",", ".") }}</span>
       </div>
     </div>
     {% else %}
-    <div class="empty">No gold data yet.</div>
+    <div class="empty">No gold data available.</div>
     {% endif %}
   </div>
 </body>
 </html>
-s
