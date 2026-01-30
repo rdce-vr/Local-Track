@@ -15,6 +15,13 @@ def main():
         replace_existing=True,
     )
 
+    scheduler.add_job(
+        run_gold_fetch, 
+        trigger="interval", 
+        hours=1, 
+        id="hourly_gold_price_fetch", 
+        replace_existing=True)
+
     print("[INFO] Scheduler started (03:00 Asia/Jakarta)")
     scheduler.start()
 
