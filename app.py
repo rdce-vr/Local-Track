@@ -122,6 +122,7 @@ def index():
     return render_template('index.html', grouped=grouped, last_update=last_update)
 
 #Gold Route
+@app.route("/gold")
 def gold():
     conn = get_db()
     cur = conn.cursor()
