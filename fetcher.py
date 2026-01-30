@@ -3,6 +3,7 @@ import requests
 import re
 
 API_URL = "https://api.web.mypertamina.id/price"
+PLUANG_API = "https://api-pluang.pluang.com/api/v3/asset/gold/pricing"
 TARGET_PROVINCE = "Prov. Jawa Tengah"
 DB_PATH = "/app/data/prices.db"
 
@@ -80,6 +81,37 @@ def run_fetch():
         if save_if_changed(conn, fuel, price):
             print(f"[UPDATE] {fuel} → Rp{price}")
     conn.close()
+
+#Gold Fetcher
+def fetch_gold_price():
+    r = requests.get(PLUANG_API, timeout=15)
+    r.raise_for_status()
+    data = r.json()["data"]["current"]
+
+    return {
+        "mid": data["midPrice"],
+        "buy": data["buy"],
+        "sell": data["sell"],
+        "updated_at": data["updated_at"],
+    }
+
+def save_gold_price(gold):
+    conn = sqlite3.connect(DB_PATH, timeout=30)
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT OR IGNORE INTO gold_prices (mid_price, buy_price, sell_price)
+        VALUES (?, ?, ?)
+    """, (gold["mid"], gold["buy"], gold["sell"]))
+    conn.commit()
+    conn.close()
+
+def run_gold_fetch():
+    try:
+        gold = fetch_gold_price()
+        save_gold_price(gold)
+        print("[INFO] Gold price fetched and stored.")
+    except Exception as e:
+        print(f"[WARN] Gold fetch failed: {e}")
 
 if __name__ == "__main__":
     run_fetch()
