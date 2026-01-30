@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gold Price</title>
+  <link rel="stylesheet" href="/static/gold.css" />
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <span>Gold – Pluang</span>
+      {% if last_update %}
+      <span class="sub">{{ last_update.strftime('%d %b %Y %H:%M') }}</span>
+      {% endif %}
+    </div>
+
+    {% if current %}
+    <div class="prices">
+      <div class="row">
+        <span class="label">Mid Price</span>
+        <span class="value">Rp {{ "{:,}".format(current[0]).replace(",", ".") }}</span>
+      </div>
+      <div class="row">
+        <span class="label">Sell (Buy from you)</span>
+        <span class="value green">Rp {{ "{:,}".format(current[1]).replace(",", ".") }}</span>
+      </div>
+      <div class="row">
+        <span class="label">Buy (Sell to you)</span>
+        <span class="value red">Rp {{ "{:,}".format(current[2]).replace(",", ".") }}</span>
+      </div>
+    </div>
+    {% else %}
+    <div class="empty">No gold data yet.</div>
+    {% endif %}
+  </div>
+</body>
+</html>
+s
