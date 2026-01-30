@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+.card {
+  width: 275px;
+  height: 510px;
+  box-sizing: border-box;
+  padding: 14px;
+  background: #111;
+  color: #fff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.sub {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.prices {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 13px;
+  color: #ccc;
+}
+
+.value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.value.green {
+  color: #2e7d32;
+}
+
+.value.red {
+  color: #d32f2f;
+}
+
+.empty {
+  font-size: 13px;
+  color: #888;
+}
