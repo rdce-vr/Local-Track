@@ -106,12 +106,31 @@ def save_gold_price(gold):
     conn.close()
 
 def run_gold_fetch():
+    print("[DEBUG] Starting gold fetch...")
+
     try:
         gold = fetch_gold_price()
-        save_gold_price(gold)
-        print("[INFO] Gold price fetched and stored.")
+        print("[DEBUG] Gold API data:", gold)
+
+        conn = sqlite3.connect(DB_PATH, timeout=30)
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT OR IGNORE INTO gold_prices (mid_price, buy_price, sell_price)
+            VALUES (?, ?, ?)
+        """, (gold["mid"], gold["buy"], gold["sell"]))
+        conn.commit()
+
+        if cur.rowcount == 0:
+            print("[INFO] Gold price unchanged, not inserted.")
+        else:
+            print(f"[INFO] Gold price inserted: mid={gold['mid']}, buy={gold['buy']}, sell={gold['sell']}")
+
+        conn.close()
+
     except Exception as e:
-        print(f"[WARN] Gold fetch failed: {e}")
+        print("[ERROR] Gold fetch failed:", e)
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     run_fetch()
