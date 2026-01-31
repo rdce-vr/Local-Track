@@ -1,41 +1,9 @@
-body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
+@import url(/static/styles.css);
 
 .card {
   width: 300px;
   height: 510px;
   box-sizing: border-box;
-  padding: 14px 14px 18px 14px;
-  background: rgba(21,21,25,1);
-  color: #c4d3dc;
-  border-radius: 0;
-  border-bottom: 1px solid #2a2a2a;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-bottom: 10px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #1f1f1f;
-}
-
-.title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #d9c38c;
-  letter-spacing: 0.2px;
-}
-
-.sub {
-  font-size: 11px;
-  color: #c4d3dc;
-  opacity: 0.7;
 }
 
 .prices {
@@ -43,6 +11,7 @@ body {
   flex-direction: column;
   gap: 18px;
 }
+
 
 .row {
   display: flex;
@@ -57,16 +26,21 @@ body {
 }
 
 .label {
-  font-size: 13px;
-  letter-spacing: 0.3px;
-  color: #c4d3dc;
-  opacity: 0.85;
+  font-size: 15px;
+  letter-spacing: -0.5px;
+  color: hsl(240, calc(8% * 1), calc(1 * 85%));
+  box-sizing: border-box;
+  display: block;
 }
 
 .value {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -1px;
+  font-weight: 400;
   color: #d9c38c;
+  text-align: justify;
+  overflow-wrap: break-word;
+  margin-left: auto;
 }
 
 .empty {
