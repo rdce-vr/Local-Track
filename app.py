@@ -134,28 +134,44 @@ def gold():
         ORDER BY id DESC
         LIMIT 1
     """)
-    row = cur.fetchone()
+    current = cur.fetchone()
 
     # Previous gold price (for delta later if needed)
     cur.execute("""
-        SELECT mid_price, buy_price, sell_price
+        SELECT mid_price
         FROM gold_prices
         ORDER BY id DESC
         LIMIT 1 OFFSET 1
     """)
-    prev = cur.fetchone()
+    prev_row = cur.fetchone()
+    prev_mid = prev_row[0] if prev_row else None
 
+    # History of gold prices (last 7 points)
+    cur.execute("""
+        SELECT mid_price
+        FROM gold_prices
+        ORDER BY id DESC
+        LIMIT 7
+    """)
+    history_rows = cur.fetchall()
     conn.close()
+
+    history = [row[0] for row in reversed(history_rows)] # Oldest to newest
 
     from datetime import datetime
     last_update = None
-    if row:
-        last_update = datetime.fromisoformat(row[3])
+    if current:
+        last_update = datetime.fromisoformat(current[3])
+
+    delta = None
+    if current and prev_mid is not None:
+        delta = current[0] - prev_mid
 
     return render_template(
         "gold.html",
-        current=row,
-        previous=prev,
+        current=current,
+        delta=delta,
+        history=history,
         last_update=last_update,
     )
 
