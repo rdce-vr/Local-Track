@@ -1,4 +1,5 @@
 @import url(/static/styles.css);
+@import url(/static/font.css);
 
 .card {
   width: 300px;
