@@ -7,7 +7,7 @@ def main():
     scheduler = BlockingScheduler(timezone=SCHEDULER_TZ)
 
     scheduler.add_job(
-        lambda: (print("[INFO] Running: daily_fuel_price_fetch"), run_fetch()),
+        run_fetch,
         trigger="cron",
         hour=3,
         minute=0,
@@ -16,7 +16,7 @@ def main():
     )
 
     scheduler.add_job(
-        lambda: (print("[INFO] Running: daily_gold_price_fetch"), run_gold_fetch()), 
+        run_gold_fetch, 
         trigger="cron", 
         hour=6,
         minute=0, 
