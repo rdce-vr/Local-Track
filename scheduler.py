@@ -24,9 +24,7 @@ def main():
         replace_existing=True
     )
 
-    print("[INFO] Scheduler started")
-    print("[INFO] Job 'daily_fuel_price_fetch' scheduled at 03:00 Asia/Jakarta")
-    print("[INFO] Job 'daily_gold_price_fetch' scheduled at 06:00 Asia/Jakarta")
+    print("[INFO] Scheduler started (03:00 Asia/Jakarta)")
     scheduler.start()
 
 if __name__ == "__main__":
