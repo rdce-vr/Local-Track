@@ -7,20 +7,7 @@
 </head>
 <body>
   <div class="card">
-    <div class="header">
-      <span class="title">Gold – Pluang</span>
-      {% if last_update %}
-      <span class="sub">{{ last_update.strftime('%d %b %Y %H:%M') }}</span>
-      {% endif %}
-    </div>
-
     {% if current %}
-    <div class="prices">
-      <div class="row mid">
-        <span class="label">Mid</span>
-        <span class="value">Rp {{ "{:,}".format(current[0]).replace(",", ".") }}</span>
-      </div>
-
       <div class="row buy">
         <span class="label">Buy</span>
         <span class="value">Rp {{ "{:,}".format(current[2]).replace(",", ".") }}</span>
