@@ -24,9 +24,7 @@ def main():
         replace_existing=True
     )
 
-    for job in scheduler.get_jobs():
-        print(f"[INFO] Job: {job.id}, Trigger: {job.trigger}, Next run: {job.next_run_time}")
-    
+    print("[INFO] Scheduler started (03:00 Asia/Jakarta)")
     scheduler.start()
 
 if __name__ == "__main__":
