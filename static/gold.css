@@ -22,8 +22,12 @@
   border-bottom: 1px solid #1f1f1f;
 }
 
+.row:first-child {
+  padding-top: 10px;
+}
+
 .row:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid #1f1f1f;
 }
 
 .label {
