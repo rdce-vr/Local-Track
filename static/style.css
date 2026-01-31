@@ -10,7 +10,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: transparent;
+  background: rgba(21, 21, 25, 1);
 }
 
 .card {
