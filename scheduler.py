@@ -18,12 +18,15 @@ def main():
     scheduler.add_job(
         run_gold_fetch, 
         trigger="cron", 
-        hours=6,
+        hour=6,
         minute=0, 
         id="daily_gold_price_fetch", 
-        replace_existing=True)
+        replace_existing=True
+    )
 
-    print("[INFO] Scheduler started (03:00 Asia/Jakarta)")
+    for job in scheduler.get_jobs():
+        print(f"[INFO] Job: {job.id}, Trigger: {job.trigger}, Next run: {job.next_run_time}")
+    
     scheduler.start()
 
 if __name__ == "__main__":
