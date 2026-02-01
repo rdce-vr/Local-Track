@@ -8,57 +8,66 @@
 <body>
   <div class="card">
     {% if current %}
-    <div class="row buy">
+
+      <div class="row buy">
         <span class="label">Buy</span>
         <span class="value">Rp {{ "{:,}".format(current[2]).replace(",", ".") }}</span>
       </div>
+
       <div class="row sell">
         <span class="label">Sell</span>
         <span class="value">Rp {{ "{:,}".format(current[1]).replace(",", ".") }}</span>
       </div>
-    </div>
-    <!-- Sparkline -->
-    {% if history and history|length > 1 %}
-    <div class="sparkline">
-      <svg viewBox="0 0 100 30" preserveAspectRatio="none">
-        {% set min_val = history|min %}
-        {% set max_val = history|max %}
-        {% set range = max_val - min_val if max_val != min_val else 1 %}
-        {% for v in history %}
-          {% set x = loop.index0 * (100 / (history|length - 1)) %}
-          {% set y = 30 - ((v - min_val) / range * 28) - 1 %}
-          {% if loop.first %}
-            <path d="M {{ x }} {{ y }}"
-                  fill="none"
-                  stroke="#d9c38c"
-                  stroke-width="1.5" />
-          {% else %}
-            <path d="L {{ x }} {{ y }}"
-                  fill="none"
-                  stroke="#d9c38c"
-                  stroke-width="1.5" />
+
+      <!-- Sparkline -->
+      {% if history and history|length > 1 %}
+      <div class="sparkline">
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none">
+          {% set min_val = history|min %}
+          {% set max_val = history|max %}
+          {% set range = max_val - min_val if max_val != min_val else 1 %}
+          {% for v in history %}
+            {% set x = loop.index0 * (100 / (history|length - 1)) %}
+            {% set y = 30 - ((v - min_val) / range * 28) - 1 %}
+            {% if loop.first %}
+              <path d="M {{ x }} {{ y }}"
+                    fill="none"
+                    stroke="#d9c38c"
+                    stroke-width="1.5" />
+            {% else %}
+              <path d="L {{ x }} {{ y }}"
+                    fill="none"
+                    stroke="#d9c38c"
+                    stroke-width="1.5" />
+            {% endif %}
+          {% endfor %}
+        </svg>
+      </div>
+      {% endif %}
+
+      <!-- Mid Price -->
+      <div class="row mid">
+        <span class="label">Mid</span>
+        <span class="value">
+          Rp {{ "{:,}".format(current[0]).replace(",", ".") }}
+          {% if delta is not none %}
+            {% if delta > 0 %}
+              <span class="delta up" title="+Rp {{ '{:,}'.format(delta).replace(',', '.') }}">🔺</span>
+            {% elif delta < 0 %}
+              <span class="delta down" title="−Rp {{ '{:,}'.format(-delta).replace(',', '.') }}">🔻</span>
+            {% else %}
+              <span class="delta same">—</span>
+            {% endif %}
           {% endif %}
-        {% endfor %}
-      </svg>
-    </div>
-    <!-- Mid Price -->
-    <div class="row mid">
-      <span class="label">Mid</span>
-      <span class="value">
-        Rp {{ "{:,}".format(current[0]).replace(",", ".") }}
-        {% if delta is not none %}
-          {% if delta > 0 %}
-            <span class="delta up" title="+Rp {{ '{:,}'.format(delta).replace(',', '.') }}">🔺</span>
-          {% elif delta < 0 %}
-            <span class="delta down" title="−Rp {{ '{:,}'.format(-delta).replace(',', '.') }}">🔻</span>
-          {% else %}
-            <span class="delta same">—</span>
-          {% endif %}
-        {% endif %}
-      </span>
-    </div>
+        </span>
+      </div>
+
+      {% if last_update %}
+      <span class="sub">{{ last_update.strftime('%d %b %Y %H:%M') }}</span>
+      {% endif %}
+
     {% else %}
-    <div class="empty">No gold data available.</div>
+      <div class="empty">No gold data available.</div>
     {% endif %}
   </div>
 </body>
