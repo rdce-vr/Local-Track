@@ -20,10 +20,11 @@
   align-items: center;
   padding-bottom: 10px;
   border-bottom: 1px solid #1f1f1f;
+  padding-top: 10px;
 }
 
 .row:first-child {
-  padding-top: 10px;
+  padding-top: 0px;
 }
 
 .row:last-child {
