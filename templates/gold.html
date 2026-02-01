@@ -27,23 +27,35 @@
           {% set max_val = history|max %}
           {% set range = max_val - min_val if max_val != min_val else 1 %}
 
-          {% set d = [] %}
+          {% set points = [] %}
           {% for v in history %}
             {% set x = loop.index0 * (100 / (history|length - 1)) %}
             {% set y = 30 - ((v - min_val) / range * 28) - 1 %}
-            {% if loop.first %}
-              {% set _ = d.append('M %.2f %.2f'|format(x, y)) %}
-            {% else %}
-              {% set _ = d.append('L %.2f %.2f'|format(x, y)) %}
-            {% endif %}
+            {% set _ = points.append((x, y, v)) %}
           {% endfor %}
 
-          <path d="{{ d|join(' ') }}"
-                fill="none"
-                stroke="#d9c38c"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round" />
+          <!-- Line -->
+          <path d="
+            {% for p in points %}
+              {% if loop.first %}M{% else %}L{% endif %}
+              {{ '%.2f'|format(p[0]) }} {{ '%.2f'|format(p[1]) }}
+            {% endfor %}
+          "
+            fill="none"
+            stroke="#d9c38c"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+
+          <!-- Hover points -->
+          {% for x, y, v in points %}
+            <circle cx="{{ '%.2f'|format(x) }}"
+                    cy="{{ '%.2f'|format(y) }}"
+                    r="1.6"
+                    fill="transparent">
+              <title>Rp {{ "{:,}".format(v).replace(",", ".") }}</title>
+            </circle>
+          {% endfor %}
         </svg>
       </div>
       {% endif %}
@@ -73,7 +85,7 @@
     {% else %}
       <div class="empty">No gold data available.</div>
     {% endif %}
-    
+
   </div>
 </body>
 </html>
