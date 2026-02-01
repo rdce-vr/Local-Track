@@ -66,9 +66,17 @@ tbody tr:last-child {
   border-bottom: none;
 }
 
+tr {
+  display: flex;
+}
+
 td {
   padding: 5px 0;
   color: #c4d3dc
+}
+
+.fuel {
+  margin-right: auto;
 }
 
 .price {
@@ -89,7 +97,6 @@ td {
 }
 
 .delta {
-  margin-left: 6px;
   font-size: 0.9em;
   cursor: default;
 }
