@@ -63,17 +63,17 @@
         <div class="mid-price">
           Rp {{ "{:,}".format(current[0]).replace(",", ".") }}
         </div>
-
-        {% if last_update %}
-        <div class="last-update">
-          {{ last_update.strftime('%d %b %Y %H:%M') }}
-        </div>
-        {% endif %}
       </div>
 
+      {% if last_update %}
+      <div class="last-update">
+        {{ last_update.strftime('%d %b %Y %H:%M') }}
+      </div>
+      {% endif %}
     {% else %}
       <div class="empty">No gold data available.</div>
     {% endif %}
+    
   </div>
 </body>
 </html>
