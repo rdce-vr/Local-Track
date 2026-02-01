@@ -57,21 +57,8 @@
 }
 
 .delta {
-  margin-left: 6px;
+  margin-left: auto;
   margin-bottom: 2px;
-  font-size: 0.9em;
-}
-
-.delta.up {
-  color: #e25b5b;
-}
-
-.delta.down {
-  color: #5bd18b;
-}
-
-.delta.same {
-  color: #888;
 }
 
 .sparkline {
@@ -87,16 +74,19 @@
 
 .center {
   text-align: center;
+  display: flex;
 } 
 
 .mid-price {
   font-size: 1.1rem;
   font-weight: 600;
   color: #d9c38c;
+  margin-right: auto;
 }
 
 .last-update {
   font-size: 0.65rem;
   color: #9aa6ad;
   margin-top: 2px;
+  text-align: center;
 }
