@@ -43,7 +43,7 @@
           "
             fill="none"
             stroke="#d9c38c"
-            stroke-width="1.5"
+            stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round" />
 
@@ -51,8 +51,8 @@
           {% for x, y, v in points %}
             <circle cx="{{ '%.2f'|format(x) }}"
                     cy="{{ '%.2f'|format(y) }}"
-                    r="1.6"
-                    fill="transparent">
+                    r="2"
+                    fill="#95db10">
               <title>Rp {{ "{:,}".format(v).replace(",", ".") }}</title>
             </circle>
           {% endfor %}
