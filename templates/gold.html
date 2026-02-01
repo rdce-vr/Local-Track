@@ -47,9 +47,6 @@
 
       <!-- Mid Price -->
       <div class="row mid">
-        <span class="label">Mid</span>
-        <span class="value">
-          Rp {{ "{:,}".format(current[0]).replace(",", ".") }}
           {% if delta is not none %}
             {% if delta > 0 %}
               <span class="delta up" title="+Rp {{ '{:,}'.format(delta).replace(',', '.') }}">🔺</span>
@@ -58,7 +55,9 @@
             {% else %}
               <span class="delta same">—</span>
             {% endif %}
-          {% endif %}
+          {% endif %}        
+        <span class="value">
+          Rp {{ "{:,}".format(current[0]).replace(",", ".") }}
         </span>
       </div>
 
