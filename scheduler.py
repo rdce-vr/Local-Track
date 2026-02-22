@@ -37,8 +37,8 @@ def main():
     scheduler.add_job(
         run_gold_fetch,
         trigger="cron",
-        hour=6,
-        minute=0,
+        hour=0,
+        minute=5,
         id="daily_gold_price_fetch",
         replace_existing=True,
     )
