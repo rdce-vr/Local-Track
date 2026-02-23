@@ -20,7 +20,7 @@ def init_gold_fetcher():
         """
     CREATE TABLE IF NOT EXISTS gold_intraday (
         timestamp DATETIME PRIMARY KEY,
-        buy INTEGER NOT  NULL,
+        buy INTEGER NOT NULL,
         sell INTEGER NOT NULL,
         mid INTEGER NOT NULL
     )
@@ -82,7 +82,7 @@ def run_gold_intraday_fetch():
         INSERT OR REPLACE INTO gold_intraday
         (timestamp, buy, sell, mid)
         VALUES (?, ?, ?, ?)
-        """, (ts, buy, sell, mid))
+        """, (ts.isoformat(), buy, sell, mid))
 
         #cleanup older than 7 days
         cutoff = datetime.now(TZ) - timedelta(days=7)
@@ -91,7 +91,7 @@ def run_gold_intraday_fetch():
             """
         DELETE FROM gold_intraday
         WHERE timestamp < ?
-        """, (cutoff,))
+        """, (cutoff.isoformat(),))
 
         conn.commit()
         conn.close()
@@ -137,7 +137,7 @@ def run_gold_history_sync():
             INSERT OR REPLACE INTO gold_daily
             (date, buy, sell, mid, source_ts)
             VALUES (?, ?, ?, ?, ?)
-            """, (date, buy, sell, mid, ts))
+            """, (date, buy, sell, mid, ts.isoformat()))
 
             debug_rows[str(date)] = mid
 

@@ -32,20 +32,6 @@ def init_db():
         ON fuel_prices (fuel_type, price)
     """)
 
-    #Gold table
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS gold_prices (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            mid_price INTEGER NOT NULL,
-            buy_price INTEGER NOT NULL,
-            sell_price INTEGER NOT NULL,
-            fetched_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    conn.execute("""
-        CREATE UNIQUE INDEX IF NOT EXISTS uniq_gold_price_change
-        ON gold_prices (mid_price, buy_price, sell_price)
-    """)
     conn.commit()
     conn.close()
 
@@ -129,14 +115,13 @@ def index():
 #Gold Route
 @app.route("/gold")
 def gold():
-    conn = get_db()
-    cur = conn.cursor()
-    current = get_gold_current()
+
+    current_row = get_gold_current()
     history_rows = get_gold_history(30)
     yesterday_mid = get_gold_yesterday_mid()
 
-    if current:
-        mid, buy, sell, ts = current
+    if current_row:
+        mid, buy, sell, ts = current_row
 
         # Convert timestamp
         if isinstance(ts, str):
@@ -149,63 +134,23 @@ def gold():
             delta = mid - yesterday_mid
         else:
             delta = None
+        current = (mid, sell, buy)
 
     else:
-        mid = buy = sell = None
+        current = None
         last_update = None
         delta = None
 
     # Sparkline values only
     history = [row[1] for row in history_rows]
 
-    # Latest gold price
-    cur.execute("""
-        SELECT mid_price, buy_price, sell_price, fetched_at
-        FROM gold_prices
-        ORDER BY id DESC
-        LIMIT 1
-    """)
-    current = cur.fetchone()
-
-    # Previous gold price (for delta later if needed)
-    cur.execute("""
-        SELECT mid_price
-        FROM gold_prices
-        ORDER BY id DESC
-        LIMIT 1 OFFSET 1
-    """)
-    prev_row = cur.fetchone()
-    prev_mid = prev_row[0] if prev_row else None
-
-    # History of gold prices (last 7 points)
-    cur.execute("""
-        SELECT mid_price
-        FROM gold_prices
-        ORDER BY id DESC
-        LIMIT 7
-    """)
-    history_rows = cur.fetchall()
-    conn.close()
-
-    history = [row[0] for row in reversed(history_rows)] # Oldest to newest
-
-    from datetime import datetime
-    last_update = None
-    if current:
-        last_update = datetime.fromisoformat(current[3])
-
-    delta = None
-    if current and prev_mid is not None:
-        delta = current[0] - prev_mid
-
     return render_template(
         "gold.html",
-        current=(mid, sell, buy),
+        current=current,
         history=history,
         delta=delta,
         last_update=last_update,
     )
-
 
 if __name__ == "__main__":
     init_db()
