@@ -21,14 +21,14 @@ def init_gold_fetcher():
     CREATE TABLE IF NOT EXISTS gold_intraday (
         timestamp DATETIME PRIMARY KEY,
         buy INTEGER NOT  NULL,
-        sell INETEGER NOT NULL,
+        sell INTEGER NOT NULL,
         mid INTEGER NOT NULL
     )
     """)
 
     conn.execute(
         """
-    CREATE TABLE IF NOI EXIST gold_daily (
+    CREATE TABLE IF NOT EXISTS gold_daily (
         date DATE PRIMARY KEY,
         buy INTEGER NOT NULL,
         sell INTEGER NOT NULL,
@@ -73,7 +73,7 @@ def run_gold_intraday_fetch():
         sell = current["sell"]
         mid = calc_mid(buy, sell)
 
-        ts = parse_iso_to_jakarta(current["update_at"])
+        ts = parse_iso_to_jakarta(current["updated_at"])
 
         conn = db()
 
@@ -91,7 +91,7 @@ def run_gold_intraday_fetch():
             """
         DELETE FROM gold_intraday
         WHERE timestamp < ?
-        """, (cutoff))
+        """, (cutoff,))
 
         conn.commit()
         conn.close()
@@ -108,7 +108,7 @@ def run_gold_intraday_fetch():
         
     except Exception as e:
 
-        print("[ERROR] Gold intraday fetch failed")
+        print("[ERROR] Gold intraday fetch failed", e)
 
 #DAILY HISTORY SYNC (1 HOUR)
 def run_gold_history_sync():
@@ -136,7 +136,7 @@ def run_gold_history_sync():
                 """
             INSERT OR REPLACE INTO gold_daily
             (date, buy, sell, mid, source_ts)
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             """, (date, buy, sell, mid, ts))
 
             debug_rows[str(date)] = mid
