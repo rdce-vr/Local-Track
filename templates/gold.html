@@ -35,27 +35,28 @@
           {% endfor %}
 
           <!-- Line -->
-          <path d="
-            {% for p in points %}
-              {% if loop.first %}M{% else %}L{% endif %}
-              {{ '%.2f'|format(p[0]) }} {{ '%.2f'|format(p[1]) }}
-            {% endfor %}
-          "
+          <polyline
             fill="none"
             stroke="#d9c38c"
             stroke-width="2"
             stroke-linecap="round"
-            stroke-linejoin="round" />
+            stroke-linejoin="round"
+            points="
+              {% for p in points %}
+                {{ '%.2f'|format(p[0]) }},{{ '%.2f'|format(p[1]) }}
+              {% endfor %}
+            "
+          />
 
           <!-- Hover points -->
-          <!-- {% for x, y, v in points %}
+          {% for x, y, v in points %}
             <circle cx="{{ '%.2f'|format(x) }}"
                     cy="{{ '%.2f'|format(y) }}"
                     r="2"
                     fill="transparent">
               <title>Rp {{ "{:,}".format(v).replace(",", ".") }}</title>
             </circle>
-          {% endfor %} -->
+          {% endfor %}
         </svg>
       </div>
       {% endif %}
