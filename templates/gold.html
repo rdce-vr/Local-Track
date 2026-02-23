@@ -48,14 +48,14 @@
             stroke-linejoin="round" />
 
           <!-- Hover points -->
-          {% for x, y, v in points %}
+          <!-- {% for x, y, v in points %}
             <circle cx="{{ '%.2f'|format(x) }}"
                     cy="{{ '%.2f'|format(y) }}"
                     r="2"
-                    fill="#transparent">
+                    fill="transparent">
               <title>Rp {{ "{:,}".format(v).replace(",", ".") }}</title>
             </circle>
-          {% endfor %}
+          {% endfor %} -->
         </svg>
       </div>
       {% endif %}
