@@ -37,7 +37,7 @@ def main():
     scheduler.add_job(
         run_gold_intraday_fetch,
         trigger="interval",
-        minute=5,
+        minutes=5,
         id="gold_intraday_fetch",
         replace_existing=True,
     )
