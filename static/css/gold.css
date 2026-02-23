@@ -32,15 +32,16 @@
 }
 
 .label {
-  font-size: 15px;
+  font-size: 14.5px;
   color: hsl(240, calc(8% * 1), calc(1 * 85%));
   box-sizing: border-box;
   display: block;
 }
 
 .value {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 400;
+  letter-spacing: -0.5px;
   color: #d9c38c;
   text-align: justify;
   overflow-wrap: break-word;
@@ -60,15 +61,29 @@
   margin-bottom: 2px;
 }
 
+.icon {
+  width: 30px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.delta.up {
+  color: #2fd354; /* green */
+}
+
+.delta.down {
+  color: #c13030; /* red */
+}
+
 .sparkline {
-  margin: 50px 0 50px 0;
+  margin: 25px 0 50px 0;
   width: 100%;
-  height: 30px;
+  height: 80px;
 }
 
 .sparkline svg {
   width: 100%;
-  height: 30px;
+  height: 115px;
 }
 
 .center {
@@ -77,15 +92,15 @@
 } 
 
 .mid-price {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
   color: #d9c38c;
   margin-right: auto;
+  letter-spacing: -0.5px;
 }
 
 .last-update {
   font-size: 0.65rem;
-  color: #9aa6ad;
+  color: hsl(240, 8%, 55%);
   margin-top: 2px;
   text-align: center;
 }

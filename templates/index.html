@@ -7,6 +7,22 @@
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
+<!-- SVG Sprite Definitions -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+
+  <!-- UP -->
+  <symbol id="icon-up" viewBox="0 0 24 24">
+    <path d="M21 14.88l-2.83 2.83L12 11.54 5.83 17.71 3 14.89l8.29-8.3a1 1 0 0 1 1.42 0z"
+          fill="#2fd354"/>
+  </symbol>
+
+  <!-- DOWN -->
+  <symbol id="icon-down" viewBox="0 0 24 24">
+    <path d="M3 9.12l2.83-2.83L12 12.46l6.17-6.17L21 9.11l-8.29 8.3a1 1 0 0 1-1.42 0z"
+          fill="#c13030"/>
+  </symbol>
+</svg>
+
   <div class="card">
     <div class="header">
       <span><img src="https://freepnglogo.com/images/all_img/1706437879pertamina-icon-png.png" height="20px" width="20px"/> Pertamina - Jawa Tengah</span>
@@ -32,9 +48,17 @@
           <td class="fuel">{{ fuel }}</td>
           {% if delta is not none %}
             {% if delta > 0 %}
-              <td class="delta up" title="Rp {{'{:,}' .format(prev_price).replace(',', '.')}}">🔺</span>
+              <td class="delta up" title="Rp {{'{:,}' .format(prev_price).replace(',', '.')}}">
+                <svg class="icon">
+                  <use href="#icon-up"></use>
+                </svg>
+              </span>
               {% elif delta < 0 %}
-              <td class="delta down" title="Rp {{'{:,}' .format(prev_price).replace(',', '.')}}">🔻</span>
+              <td class="delta down" title="Rp {{'{:,}' .format(prev_price).replace(',', '.')}}">
+                <svg class="icon">
+                  <use href="#icon-down"></use>
+                </svg>
+              </span>
               {% else %}
               <td class="delta same" title="No Change">➖</span>
             {% endif %}
