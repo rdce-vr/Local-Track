@@ -33,7 +33,6 @@
 
 .label {
   font-size: 15px;
-  letter-spacing: -0.5px;
   color: hsl(240, calc(8% * 1), calc(1 * 85%));
   box-sizing: border-box;
   display: block;
@@ -41,7 +40,6 @@
 
 .value {
   font-size: 15px;
-  letter-spacing: -1px;
   font-weight: 400;
   color: #d9c38c;
   text-align: justify;
