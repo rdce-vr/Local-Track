@@ -1,5 +1,5 @@
-@import url(/static/style.css);
-@import url(/static/font.css);
+@import url(/static/css/style.css);
+@import url(/static/css/font.css);
 
 .card {
   width: 300px;
