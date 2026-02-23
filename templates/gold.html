@@ -37,7 +37,7 @@
           <!-- Line -->
           <polyline
             fill="none"
-            stroke="#d9c38c"
+            stroke="#9aa6ad"
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -46,13 +46,14 @@
                 {{ '%.2f'|format(p[0]) }},{{ '%.2f'|format(p[1]) }}
               {% endfor %}
             "
+            vector-effect="non-scaling-stroke"
           />
 
           <!-- Hover points -->
           {% for x, y, v in points %}
             <circle cx="{{ '%.2f'|format(x) }}"
                     cy="{{ '%.2f'|format(y) }}"
-                    r="2"
+                    r="3"
                     fill="transparent">
               <title>Rp {{ "{:,}".format(v).replace(",", ".") }}</title>
             </circle>
