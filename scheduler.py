@@ -2,8 +2,8 @@ import signal
 import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
-from fetcher import run_fetch, run_gold_fetch
-from app import init_db
+from fetcher import run_fetch
+from fetcher_gold import run_gold_intraday_fetch, run_gold_history_sync
 
 SCHEDULER_TZ = "Asia/Jakarta"
 
@@ -35,11 +35,18 @@ def main():
     )
 
     scheduler.add_job(
-        run_gold_fetch,
-        trigger="cron",
-        hour=0,
+        run_gold_intraday_fetch,
+        trigger="interval",
         minute=5,
-        id="daily_gold_price_fetch",
+        id="gold_intraday_fetch",
+        replace_existing=True,
+    )
+
+    scheduler.add_job(
+        run_gold_history_sync,
+        trigger="interval",
+        hours=1,
+        id="gold_history_sync",
         replace_existing=True,
     )
 

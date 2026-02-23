@@ -1,6 +1,11 @@
 import sqlite3
 from datetime import datetime
 from flask import Flask, render_template
+from fetcher_gold import (
+    get_gold_current,
+    get_gold_history,
+    get_gold_yesterday_mid,
+)
 
 DB_PATH = "/app/data/prices.db"
 
@@ -126,6 +131,32 @@ def index():
 def gold():
     conn = get_db()
     cur = conn.cursor()
+    current = get_gold_current()
+    history_rows = get_gold_history(30)
+    yesterday_mid = get_gold_yesterday_mid()
+
+    if current:
+        mid, buy, sell, ts = current
+
+        # Convert timestamp
+        if isinstance(ts, str):
+            ts = datetime.fromisoformat(ts)
+
+        last_update = ts
+
+        # Delta vs yesterday close
+        if yesterday_mid is not None:
+            delta = mid - yesterday_mid
+        else:
+            delta = None
+
+    else:
+        mid = buy = sell = None
+        last_update = None
+        delta = None
+
+    # Sparkline values only
+    history = [row[1] for row in history_rows]
 
     # Latest gold price
     cur.execute("""
@@ -169,11 +200,12 @@ def gold():
 
     return render_template(
         "gold.html",
-        current=current,
-        delta=delta,
+        current=(mid, sell, buy),
         history=history,
+        delta=delta,
         last_update=last_update,
     )
+
 
 if __name__ == "__main__":
     init_db()
