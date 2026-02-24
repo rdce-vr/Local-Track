@@ -108,11 +108,11 @@ td {
   vertical-align: middle;
 }
 
-.delta.up {
+.delta.down {
   color: #2fd354; /* green */
 }
 
-.delta.down {
+.delta.up {
   color: #c13030; /* red */
 }
 
