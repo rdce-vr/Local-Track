@@ -2,6 +2,7 @@ import sqlite3
 import requests
 import re
 from zoneinfo import ZoneInfo
+from notifier import send_telegram, send_discord
 
 API_URL = "https://api.web.mypertamina.id/price"
 TARGET_PROVINCE = "Prov. Jawa Tengah"
@@ -47,6 +48,11 @@ def save_if_changed(conn, fuel, price):
         (fuel, price, "mypertamina-api"),
     )
     conn.commit()
+
+    if price is not None:
+        message = f"Price update for {fuel} in {TARGET_PROVINCE}: Rp{price}"
+        send_telegram(message)
+        send_discord(message)
     return True
 
 def run_fetch():
