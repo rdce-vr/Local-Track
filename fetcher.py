@@ -2,7 +2,7 @@ import sqlite3
 import requests
 import re
 from zoneinfo import ZoneInfo
-from notifier import telegram, discord
+from notifier import send_telegram, send_discord
 
 API_URL = "https://api.web.mypertamina.id/price"
 TARGET_PROVINCE = "Prov. Jawa Tengah"
