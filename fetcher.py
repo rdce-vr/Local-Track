@@ -48,6 +48,11 @@ def save_if_changed(conn, fuel, price):
         (fuel, price, "mypertamina-api"),
     )
     conn.commit()
+
+    if price is not None:
+        message = f"Price update for {fuel} in {TARGET_PROVINCE}: Rp{price}"
+        send_telegram(message)
+        send_discord(message)
     return True
 
 def format_rp(n):
