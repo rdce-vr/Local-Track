@@ -55,6 +55,10 @@ def save_if_changed(conn, fuel, price):
         send_discord(message)
     return True
 
+def format_rp(n):
+    return f"{n:,}".replace(",", ".")
+
+
 def run_fetch():
     r = requests.get(API_URL, timeout=30)
     r.raise_for_status()
@@ -84,10 +88,44 @@ def run_fetch():
     print("[DEBUG] Jawa Tengah prices:", prices)
 
     conn = db()
+
+    updates = []  # collect changes
+
     for fuel, price in prices.items():
-        if save_if_changed(conn, fuel, price):
+        old = last_price(conn, fuel)
+
+        if old != price:
+            save_if_changed(conn, fuel, price)
             print(f"[UPDATE] {fuel} → Rp{price}")
+
+            if old is not None:
+                delta = price - old
+
+                # optional anti-noise filter
+                if abs(delta) < 100:
+                    continue
+
+                updates.append((fuel, price, delta))
+
     conn.close()
+
+    # SEND ONE GROUPED MESSAGE
+    if updates:
+        lines = ["⛽ <b>Fuel Price Update (Jawa Tengah)</b>\n"]
+
+        for fuel, price, delta in updates:
+            arrow = "🔺" if delta > 0 else "🔻"
+
+            lines.append(
+                f"{fuel}\n"
+                f"{arrow} Rp {format_rp(price)} "
+                f"({delta:+,})".replace(",", ".")
+            )
+
+        message = "\n".join(lines)
+
+        send_telegram(message)
+        send_discord(message)
 
 if __name__ == "__main__":
     run_fetch()
