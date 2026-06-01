@@ -49,10 +49,6 @@ def save_if_changed(conn, fuel, price):
     )
     conn.commit()
 
-    if price is not None:
-        message = f"Price update for {fuel} in {TARGET_PROVINCE}: Rp{price}"
-        send_telegram(message)
-        send_discord(message)
     return True
 
 def format_rp(n):
@@ -111,7 +107,7 @@ def run_fetch():
 
     # SEND ONE GROUPED MESSAGE
     if updates:
-        lines = ["⛽ <b>Fuel Price Update (Jawa Tengah)</b>\n"]
+        lines = ["⛽ FUEL PRICE UPDATE ⛽\n"]
 
         for fuel, price, delta in updates:
             arrow = "🔺" if delta > 0 else "🔻"
