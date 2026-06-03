@@ -28,9 +28,27 @@ def main():
     scheduler.add_job(
         run_fetch,
         trigger="cron",
-        hour=3,
+        hour=20,
+        minute=5,
+        id="daily_fuel_price_fetch_8pm",
+        replace_existing=True,
+    )
+
+    scheduler.add_job(
+        run_fetch,
+        trigger="cron",
+        hour=21,
         minute=0,
-        id="daily_fuel_price_fetch",
+        id="daily_fuel_price_fetch_9pm",
+        replace_existing=True,
+    )
+
+    scheduler.add_job(
+        run_fetch,
+        trigger="cron",
+        hour=22,
+        minute=0,
+        id="daily_fuel_price_fetch_10pm",
         replace_existing=True,
     )
 
