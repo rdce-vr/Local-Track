@@ -86,6 +86,11 @@
   height: 115px;
 }
 
+.center {
+  text-align: center;
+  display: flex;
+} 
+
 .mid-price {
   font-size: 1rem;
   color: #d9c38c;
