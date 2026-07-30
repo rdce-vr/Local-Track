@@ -188,7 +188,7 @@ def get_gold_history(days=30):
     return rows
 
 def get_gold_yesterday_mid():
-    yesterday = datetime.now(TZ).date() - timedelta(days=1)
+    today = datetime.now(TZ).date()
 
     conn = db()
 
@@ -196,8 +196,10 @@ def get_gold_yesterday_mid():
         """
     SELECT mid
     FROM gold_daily
-    WHERE date = ?
-    """, (yesterday,)).fetchone()
+    WHERE date < ?
+    ORDER BY date DESC
+    LIMIT 1
+    """, (today,)).fetchone()
 
     conn.close()
 
