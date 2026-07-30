@@ -1,13 +1,12 @@
 import sqlite3
 import requests
 import re
-import os
 from zoneinfo import ZoneInfo
 from notifier import send_telegram, send_discord
 
 API_URL = "https://api.web.mypertamina.id/price"
 TARGET_PROVINCE = "Prov. Jawa Tengah"
-DB_PATH = os.getenv("DB_PATH", "/app/data/prices.db")
+DB_PATH = "/app/data/prices.db"
 TZ = ZoneInfo("Asia/Jakarta")
 
 def db():
