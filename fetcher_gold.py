@@ -1,9 +1,10 @@
 import sqlite3
 import requests
+import os
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 
-DB_PATH = "/app/data/prices.db"
+DB_PATH = os.getenv("DB_PATH", "/app/data/prices.db")
 
 API_URL = "https://api-pluang.pluang.com/api/v3/asset/gold/pricing"
 
