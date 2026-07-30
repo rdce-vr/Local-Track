@@ -10,6 +10,7 @@ from fetcher_gold import (
 DB_PATH = "/app/data/prices.db"
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 def get_db():
     return sqlite3.connect(DB_PATH, timeout=30)
