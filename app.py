@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from datetime import datetime
 from flask import Flask, render_template
 from fetcher_gold import (
@@ -7,7 +8,7 @@ from fetcher_gold import (
     get_gold_yesterday_mid,
 )
 
-DB_PATH = "/app/data/prices.db"
+DB_PATH = os.getenv("DB_PATH", "/app/data/prices.db")
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
