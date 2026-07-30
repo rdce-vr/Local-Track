@@ -12,13 +12,13 @@
   <!-- UP -->
   <symbol id="icon-up" viewBox="0 0 24 24">
     <path d="M21 14.88l-2.83 2.83L12 11.54 5.83 17.71 3 14.89l8.29-8.3a1 1 0 0 1 1.42 0z"
-          fill="#2fd354"/>
+          fill="currentColor"/>
   </symbol>
 
   <!-- DOWN -->
   <symbol id="icon-down" viewBox="0 0 24 24">
     <path d="M3 9.12l2.83-2.83L12 12.46l6.17-6.17L21 9.11l-8.29 8.3a1 1 0 0 1-1.42 0z"
-          fill="#c13030"/>
+          fill="#currentColor"/>
   </symbol>
 </svg>
 
@@ -83,13 +83,13 @@
         {% if delta is not none %}
           {% if delta > 0 %}
             <div class="delta up" title="+Rp {{ '{:,}'.format(delta).replace(',', '.') }}">
-              <svg class="icon">
+              <svg class="icon" viewbox="0 0 24 24">
                 <use href="#icon-up"></use>
               </svg>
             </div>
           {% elif delta < 0 %}
             <div class="delta down" title="−Rp {{ '{:,}'.format(-delta).replace(',', '.') }}">
-              <svg class="icon">
+              <svg class="icon" viewbox="0 0 24 24">
                 <use href="#icon-down"></use>
               </svg>
             </div>
