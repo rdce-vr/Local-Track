@@ -1,7 +1,9 @@
+import os
 import signal
 import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
+from apshceduler.executors.pool import ThreadPoolExecutor
 from fetcher import run_fetch
 from fetcher_gold import run_gold_intraday_fetch, run_gold_history_sync
 
@@ -16,55 +18,52 @@ def job_listener(event):
         print(f"[INFO] Job {event.job_id} completed successfully")
 
 def shutdown(scheduler):
+    print("[INFO] Shutting down scheduler...")
     if scheduler.running:
-        print("[INFO] Shutting down scheduler...")
         scheduler.shutdown()
     sys.exit(0)
 
 def main():
-    scheduler = BlockingScheduler(timezone=SCHEDULER_TZ)
+    # Read and parse .env values with safe fallback defaults
+    fuel_hours = os.getenv("FUEL_CRON_HOURS", "20,21,22")
+    fuel_minutes - int(os.getenv("FUEL_CRON_MINUTE", "5"))
+    gold_intra_main = int(os.getenv("GOLD_INTRADAY_MINUTES", "5"))
+    gold_hist_hours = int(os.getenv("GOLD_HISTORY_HOURS", "1")
+
+    # Configure multiple execution lanes to avoid job blocks
+    executors = {'default': ThreadPoolExecutor(10)}
+    scheduler = BlockingScheduler(timezone=SCHEDULER_TZ, executors=executors)
     scheduler.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
 
-    scheduler.add_job(
-        run_fetch,
-        trigger="cron",
-        hour=20,
-        minute=5,
-        id="daily_fuel_price_fetch_8pm",
-        replace_existing=True,
-    )
+    # Fuel Cron Jobs
+    for hour_str in fuel_hours.split(","):
+        hour_val = int(hour_str.strip())
+        scheduler.add_job(
+            run_fetch,
+            trigger="cron",
+            hour=hour_val,
+            minute=fuel_minute,
+            id="daily_fuel_price_fetch_{hour_val}h",
+            misfire_grace_time=300, #seconds grace window
+            replace_existing=True,
+        )
 
-    scheduler.add_job(
-        run_fetch,
-        trigger="cron",
-        hour=21,
-        minute=0,
-        id="daily_fuel_price_fetch_9pm",
-        replace_existing=True,
-    )
-
-    scheduler.add_job(
-        run_fetch,
-        trigger="cron",
-        hour=22,
-        minute=0,
-        id="daily_fuel_price_fetch_10pm",
-        replace_existing=True,
-    )
-
+    # Gold Cron Jobs
     scheduler.add_job(
         run_gold_intraday_fetch,
         trigger="interval",
-        minutes=5,
+        minutes=gold_intra_min,
         id="gold_intraday_fetch",
+        misfire_grace_time=60,
         replace_existing=True,
     )
 
     scheduler.add_job(
         run_gold_history_sync,
         trigger="interval",
-        hours=1,
+        hours=gold_hist_hours,
         id="gold_history_sync",
+        misfire_grace_time=300,
         replace_existing=True,
     )
 
