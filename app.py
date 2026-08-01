@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from flask import Flask, render_template
 from fetcher_gold import (
     get_gold_current,
@@ -8,6 +9,7 @@ from fetcher_gold import (
 )
 
 DB_PATH = "/app/data/prices.db"
+TZ = ZoneInfo("Asia/Jakarta")
 
 app = Flask(__name__)
 
@@ -108,7 +110,13 @@ def index():
 
     last_update = None
     if last_update_raw:
-        last_update = datetime.fromisoformat(last_update_raw)
+        # fetched_at is stored by SQLite's CURRENT_TIMESTAMP, which is always UTC
+        # and naive (no tzinfo) — attach UTC, then convert to local time for display.
+        last_update = (
+            datetime.fromisoformat(last_update_raw)
+            .replace(tzinfo=ZoneInfo("UTC"))
+            .astimezone(TZ)
+        )
 
     return render_template('index.html', grouped=grouped, last_update=last_update)
 
