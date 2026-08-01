@@ -3,7 +3,7 @@ import signal
 import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
-from apshceduler.executors.pool import ThreadPoolExecutor
+from apscheduler.executors.pool import ThreadPoolExecutor
 from fetcher import run_fetch
 from fetcher_gold import run_gold_intraday_fetch, run_gold_history_sync
 
