@@ -26,9 +26,9 @@ def shutdown(scheduler):
 def main():
     # Read and parse .env values with safe fallback defaults
     fuel_hours = os.getenv("FUEL_CRON_HOURS", "20,21,22")
-    fuel_minutes - int(os.getenv("FUEL_CRON_MINUTE", "5"))
+    fuel_minutes = int(os.getenv("FUEL_CRON_MINUTE", "5"))
     gold_intra_main = int(os.getenv("GOLD_INTRADAY_MINUTES", "5"))
-    gold_hist_hours = int(os.getenv("GOLD_HISTORY_HOURS", "1")
+    gold_hist_hours = int(os.getenv("GOLD_HISTORY_HOURS", "1"))
 
     # Configure multiple execution lanes to avoid job blocks
     executors = {'default': ThreadPoolExecutor(10)}
