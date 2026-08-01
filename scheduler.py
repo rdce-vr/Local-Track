@@ -42,8 +42,8 @@ def main():
             run_fetch,
             trigger="cron",
             hour=hour_val,
-            minute=fuel_minute,
-            id="daily_fuel_price_fetch_{hour_val}h",
+            minute=fuel_minutes,
+            id=f"daily_fuel_price_fetch_{hour_val}h",
             misfire_grace_time=300, #seconds grace window
             replace_existing=True,
         )
@@ -52,7 +52,7 @@ def main():
     scheduler.add_job(
         run_gold_intraday_fetch,
         trigger="interval",
-        minutes=gold_intra_min,
+        minutes=gold_intra_main,
         id="gold_intraday_fetch",
         misfire_grace_time=60,
         replace_existing=True,
