@@ -25,8 +25,10 @@ def shutdown(scheduler):
 
 def main():
     # Read and parse .env values with safe fallback defaults
+    fuel_mode = os.getenv("FUEL_SCHEDULE_MODE", "cron").strip().lower()
     fuel_hours = os.getenv("FUEL_CRON_HOURS", "20,21,22")
     fuel_minutes = int(os.getenv("FUEL_CRON_MINUTE", "5"))
+    fuel_interval_minutes = int(os.getenv("FUEL_INTERVAL_MINUTES", "60"))
     gold_intra_main = int(os.getenv("GOLD_INTRADAY_MINUTES", "5"))
     gold_hist_hours = int(os.getenv("GOLD_HISTORY_HOURS", "1"))
 
@@ -35,18 +37,30 @@ def main():
     scheduler = BlockingScheduler(timezone=SCHEDULER_TZ, executors=executors)
     scheduler.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
 
-    # Fuel Cron Jobs
-    for hour_str in fuel_hours.split(","):
-        hour_val = int(hour_str.strip())
+    # Fuel Jobs — either fixed hours (cron) or a fixed interval, depending on FUEL_SCHEDULE_MODE
+    if fuel_mode == "interval":
         scheduler.add_job(
             run_fetch,
-            trigger="cron",
-            hour=hour_val,
-            minute=fuel_minutes,
-            id=f"daily_fuel_price_fetch_{hour_val}h",
-            misfire_grace_time=300, #seconds grace window
+            trigger="interval",
+            minutes=fuel_interval_minutes,
+            id="fuel_price_fetch_interval",
+            misfire_grace_time=300,  # seconds grace window
             replace_existing=True,
         )
+        print(f"[INFO] Fuel scheduler mode: interval (every {fuel_interval_minutes} min)")
+    else:
+        for hour_str in fuel_hours.split(","):
+            hour_val = int(hour_str.strip())
+            scheduler.add_job(
+                run_fetch,
+                trigger="cron",
+                hour=hour_val,
+                minute=fuel_minutes,
+                id=f"daily_fuel_price_fetch_{hour_val}h",
+                misfire_grace_time=300,  # seconds grace window
+                replace_existing=True,
+            )
+        print(f"[INFO] Fuel scheduler mode: cron (hours={fuel_hours}, minute={fuel_minutes})")
 
     # Gold Cron Jobs
     scheduler.add_job(
